@@ -53,8 +53,8 @@ server.setErrorHandler((e: any, req, reply) => {
 server.register(fastifySwagger, {
   openapi: {
     info: {
-      title: "Beck's Hybrids Demo",
-      description: "A demo API for Beck's Hybrids",
+      title: "Demo API",
+      description: "A demo API",
       version: "1.0.0",
     },
   },
