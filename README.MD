@@ -23,7 +23,7 @@ A Node.js API built using [Fastify](https://fastify.dev/) and [TypeORM](https://
 
 When a user or company is created, an event is emitted to get the latitude and longitude of the given address. This is stored as a `geography` type in the indexed database column `location`. Once this process is done for a user, another event is emitted to match the user to the closest three companies in a 50-mile radius.
 
-### user-app
+### `user-app`
 
 A Next.js application to create users in the database. Highlights include
 
@@ -31,7 +31,7 @@ A Next.js application to create users in the database. Highlights include
 - Usage of shared `api-sdk` library to make type-safe requests to the API
 - Styled with Tailwind CSS.
 
-### company-app
+### `company-app`
 
 A Next.js application to create companies in the database. After your company is created, you are redirected to its dashboard, where the company matches will be displayed.
 
