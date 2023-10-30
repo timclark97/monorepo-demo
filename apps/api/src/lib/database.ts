@@ -13,9 +13,4 @@ export const PostgresSource = new DataSource({
   ssl: true,
   synchronize: true,
   entities: [User, Company, Match],
-  extra: {
-    idleTimeoutMillis: 0,
-    max: 1,
-  },
-  migrations: ["src/migrations/*.js"],
 });
