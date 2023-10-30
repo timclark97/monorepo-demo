@@ -66,4 +66,6 @@ PGPASSWORD=
 MAPBOX_TOKEN=
 ```
 
-> I recommend [Neon](https://neon.tech/) for the PostgreSQL database. You can create a free Mapbox account [here](https://www.mapbox.com/) 3. From the root of the directory, run `npm run mono` and run the apps in dev mode.
+> I recommend [Neon](https://neon.tech/) for the PostgreSQL database. You can create a free Mapbox account [here](https://www.mapbox.com/).
+
+3. From the root of the directory, run `npm run mono` and run the apps in dev mode.
