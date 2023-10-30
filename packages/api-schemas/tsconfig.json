@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "strict": true,
+    "outDir": "dist",
+    "preserveWatchOutput": true,
+    "noUnusedLocals": true
+  },
+  "include": ["*/**.ts", "src/index.ts"],
+  "exclude": ["node_modules"]
+}

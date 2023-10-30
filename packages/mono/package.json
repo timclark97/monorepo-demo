@@ -1,0 +1,7 @@
+{
+  "name": "mono",
+  "type": "module",
+  "dependencies": {
+    "inquirer": "9.2.11"
+  }
+}

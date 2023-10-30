@@ -1,0 +1,19 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "api#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "env": ["PG_HOST", "PG_USER", "PG_PASSWORD", "PG_DATABASE"]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "dev": {},
+    "test": {}
+  }
+}
