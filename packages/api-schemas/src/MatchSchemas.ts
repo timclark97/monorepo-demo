@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { getUserResponseSchema } from "./UserSchema";
+import { getUserResponseSchema } from "./UserSchemas";
 
 export const matchSchema = z.object({
   id: z.string().uuid(),

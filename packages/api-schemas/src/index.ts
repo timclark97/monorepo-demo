@@ -1,4 +1,4 @@
 export * from "./CommonSchemas";
-export * from "./UserSchema";
+export * from "./UserSchemas";
 export * from "./CompanySchemas";
 export * from "./MatchSchemas";
