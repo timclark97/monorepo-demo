@@ -4,7 +4,7 @@ import User from "../components/User/UserEntity";
 import Company from "../components/Company/CompanyEntity";
 import Match from "../components/Match/MatchEntity";
 
-export const PostgresSource = new DataSource({
+const db = new DataSource({
   type: "postgres",
   host: process.env.PG_HOST,
   username: process.env.PG_USER,
@@ -14,3 +14,5 @@ export const PostgresSource = new DataSource({
   synchronize: true,
   entities: [User, Company, Match],
 });
+
+export default db;

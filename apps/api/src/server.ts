@@ -1,13 +1,12 @@
 import fastify from "fastify";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUI from "@fastify/swagger-ui";
+import cors from "@fastify/cors";
 import {
   serializerCompiler,
   validatorCompiler,
   jsonSchemaTransform,
 } from "fastify-type-provider-zod";
-
-import { PostgresSource } from "./lib/database";
 
 import UserRoutes from "./components/User/UserRoutes";
 import CompanyRoutes from "./components/Company/CompanyRoutes";
@@ -61,6 +60,8 @@ server.register(fastifySwagger, {
   transform: jsonSchemaTransform,
 });
 
+server.register(cors);
+
 // Routes
 server.register(UserRoutes, { prefix: "/users" });
 server.register(CompanyRoutes, { prefix: "/companies" });
@@ -69,16 +70,17 @@ server.register(fastifySwaggerUI, {
   prefix: "/docs",
 });
 
-const startServer = async () => {
-  try {
-    await PostgresSource.initialize();
-    await server.listen({ port: 5001 });
-    console.log("Server running. See API docs http://localhost:5001/docs");
-  } catch (err) {
-    console.error(err);
-    console.error("Failed to start server. Terminating process.");
-    process.exit(1);
-  }
+const startServer = () => {
+  server
+    .listen({ port: 5001 })
+    .then(() => {
+      console.log("Server running. See API docs http://localhost:5001/docs");
+    })
+    .catch((e) => {
+      console.error(e);
+      console.error("Failed to start server. Terminating process.");
+      process.exit(1);
+    });
 };
 
 export default startServer;
