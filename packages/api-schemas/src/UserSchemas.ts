@@ -1,40 +1,33 @@
 import { z } from "zod";
 
 export const userSchema = z.object({
-  id: z.string().uuid(),
-  createdOn: z.coerce.date(),
-  updatedOn: z.coerce.date(),
+  id: z.number().positive(),
   firstName: z.string().min(2).max(20),
-  lastName: z.string().min(2).max(20),
-  address1: z.string(),
-  address2: z.string().optional(),
-  city: z.string(),
-  zipCode: z.string(),
-  stateId: z.string().length(2),
-  location: z.object({
-    type: z.literal("Point"),
-    coordinates: z.array(z.number()).length(2).or(z.array(z.never()).length(0)),
-  }),
+  lastName: z.string().min(2).max(20)
 });
 export type UserSchema = z.infer<typeof userSchema>;
 
 export const createUserBodySchema = userSchema.omit({
-  id: true,
-  createdOn: true,
-  updatedOn: true,
-  location: true,
+  id: true
 });
 export type CreateUserBodySchema = z.infer<typeof createUserBodySchema>;
 
-export const createUserResponseSchema = z.object({ id: z.string().uuid() });
+export const createUserResponseSchema = userSchema;
 export type CreateUserResponseSchema = z.infer<typeof createUserResponseSchema>;
 
-export const getUserParamsSchema = z.object({ id: z.string().uuid() });
+export const getUserParamsSchema = z.object({ id: z.coerce.number() });
 export type GetUserParamsSchema = z.infer<typeof getUserParamsSchema>;
 
-export const getUserResponseSchema = userSchema.omit({
-  createdOn: true,
-  updatedOn: true,
-  location: true,
-});
+export const getUserResponseSchema = userSchema;
 export type GetUserResponseSchema = z.infer<typeof getUserResponseSchema>;
+
+export const searchUsersQuerySchema = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional()
+});
+export type SearchUsersQuerySchema = z.infer<typeof searchUsersQuerySchema>;
+
+export const searchUsersResponseSchema = z.array(userSchema);
+export type SearchUsersResponseSchema = z.infer<
+  typeof searchUsersResponseSchema
+>;

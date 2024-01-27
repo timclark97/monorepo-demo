@@ -1,3 +1,1 @@
-export * from "./CompanyRequests";
-export * from "./MatchRequests";
-export * from "./UserRequests";
+export * from "./UserRequests.ts";

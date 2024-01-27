@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 import { exec } from "child_process";
 
-const appList = ["api", "user-app", "company-app"];
+const appList = ["api", "user-app"];
 const makeBuildCommand = (app) =>
   `npx turbo build --filter=${app}... --no-cache`;
 
@@ -14,7 +14,7 @@ const recursiveRunner = (cmd) => {
         const { retry } = await inquirer.prompt({
           name: `retry`,
           message: `${cmd} failed. Want to retry?`,
-          type: "confirm",
+          type: "confirm"
         });
         if (retry) {
           return recursiveRunner(cmd);
@@ -32,7 +32,7 @@ const main = async () => {
     name: "q1",
     type: "list",
     message: "What do you want to do",
-    choices: ["run app(s) in dev mode", "build app(s)"],
+    choices: ["run app(s) in dev mode", "build app(s)"]
   });
   const { apps } = await inquirer.prompt({
     name: "apps",
@@ -44,12 +44,12 @@ const main = async () => {
         return "You must select at least one app";
       }
       return true;
-    },
+    }
   });
 
   if (q1.split(" ")[0] === "run") {
     const command = apps.map((a) => `--filter=${a}...`).join(" ");
-    const p = exec(`npx turbo dev ${command}`);
+    const p = exec(`npx turbo dev ${command} --force`);
     p.stdout.pipe(process.stdout);
   }
 

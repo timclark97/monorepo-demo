@@ -1,0 +1,8 @@
+{
+  "exec": "node --import tsx/esm ./src/index.ts",
+  "watch": ["./src", "../../packages/api-schemas/src"],
+  "ext": "ts",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

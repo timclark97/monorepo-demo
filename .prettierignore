@@ -1,0 +1,6 @@
+dist
+.turbo
+.next
+package-lock.json
+.env
+**/drizzle

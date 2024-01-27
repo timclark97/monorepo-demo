@@ -1,18 +1,13 @@
-import { DataSource } from "typeorm";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import Database from "better-sqlite3";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
-import User from "../components/User/UserEntity";
-import Company from "../components/Company/CompanyEntity";
-import Match from "../components/Match/MatchEntity";
+import { users } from "@/components/User/UserEntity.js";
 
-const db = new DataSource({
-  type: "postgres",
-  host: process.env.PG_HOST,
-  username: process.env.PG_USER,
-  password: process.env.PG_PASSWORD,
-  database: process.env.PG_DATABASE,
-  ssl: true,
-  synchronize: true,
-  entities: [User, Company, Match],
-});
+const sqlite = new Database(":memory:");
 
-export default db;
+export { users };
+
+export const db = drizzle(sqlite, { schema: { users } });
+
+migrate(db, { migrationsFolder: "migrations" });

@@ -1,60 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  BaseEntity,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Index,
-  OneToMany,
-} from "typeorm";
-import { Point } from "geojson";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
-import Match from "../Match/MatchEntity";
+export const users = sqliteTable("users", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  firstName: text("first_name").default("").notNull(),
+  lastName: text("last_name").default("").notNull()
+});
 
-@Entity("users")
-class User extends BaseEntity {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
-  @CreateDateColumn({ name: "created_on" })
-  createdOn: Date;
-
-  @UpdateDateColumn({ name: "updated_on" })
-  updatedOn: Date;
-
-  @Column({ type: "text", name: "first_name", default: "" })
-  firstName: string;
-
-  @Column({ type: "text", name: "last_name", default: "" })
-  lastName: string;
-
-  @Column({ type: "text", name: "address_1", default: "" })
-  address1: string;
-
-  @Column({ type: "text", name: "address_2", default: "" })
-  address2: string;
-
-  @Column({ type: "text", default: "" })
-  city: string;
-
-  @Column({ type: "text", name: "zip_code", default: "" })
-  zipCode: string;
-
-  @Column({ type: "text", name: "sate_id", default: "" })
-  stateId: string;
-
-  @Index({ spatial: true })
-  @Column({
-    type: "geography",
-    spatialFeatureType: "Point",
-    srid: 4326,
-    nullable: true,
-  })
-  location: Point;
-
-  @OneToMany(() => Match, (m) => m.user)
-  matches: Match[];
-}
-
-export default User;
+export type User = typeof users.$inferSelect;

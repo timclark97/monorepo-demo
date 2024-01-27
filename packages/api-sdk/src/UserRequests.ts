@@ -1,20 +1,20 @@
-import {
+import type {
   CreateUserBodySchema,
   CreateUserResponseSchema,
-  GetUserParamsSchema,
+  GetUserParamsSchema
 } from "api-schemas";
 
-import apiFetcher from "./apiFetcher";
+import { apiFetcher } from "./apiFetcher.ts";
 
 export const createUser = async (body: CreateUserBodySchema) =>
   apiFetcher<CreateUserResponseSchema>({
     path: "/users",
     method: "POST",
-    body,
+    body
   });
 
 export const getUser = async (params: GetUserParamsSchema) =>
   apiFetcher<CreateUserResponseSchema>({
     path: `/users/${params.id}`,
-    method: "GET",
+    method: "GET"
   });

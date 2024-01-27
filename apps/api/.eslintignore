@@ -1,0 +1,7 @@
+.github
+node_modules
+.env
+.turbo
+.github
+package-lock.json
+dist

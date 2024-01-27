@@ -1,15 +1,13 @@
 {
   "name": "api-schemas",
-  "main": "dist/index.js",
-  "types": "src/index.ts",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "dev": "tsc -w",
     "build": "tsc"
   },
   "dependencies": {
-    "zod": "^3.21.4"
-  },
-  "devDependencies": {
-    "typescript": "^5.2.2"
+    "zod": "^3.22.4"
   }
 }

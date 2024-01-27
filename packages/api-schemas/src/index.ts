@@ -1,4 +1,3 @@
-export * from "./CommonSchemas";
-export * from "./UserSchemas";
-export * from "./CompanySchemas";
-export * from "./MatchSchemas";
+export * from "./CommonSchemas.js";
+export * from "./UserSchemas.js";
+export * from "./ErrorSchemas.js";

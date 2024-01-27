@@ -1,29 +1,36 @@
 {
   "name": "api",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
+    "lint": "eslint .",
     "build": "tsc",
-    "dev": "nodemon --watch src --watch ../../packages/api-schemas/src src/index.ts"
+    "dev": "nodemon --config nodemon.json"
   },
   "dependencies": {
-    "@fastify/cors": "8.4.1",
-    "@fastify/swagger": "8.12.0",
-    "@fastify/swagger-ui": "1.10.1",
-    "@mapbox/mapbox-sdk": "0.15.3",
+    "@fastify/cors": "8.5.0",
+    "@fastify/swagger": "8.14.0",
+    "@fastify/swagger-ui": "^2.1.0",
     "api-schemas": "*",
-    "dotenv": "16.3.1",
-    "fastify": "4.24.3",
-    "pg": "8.11.3",
-    "reflect-metadata": "0.1.13",
-    "typeorm": "0.3.17",
-    "zod": "3.22.4"
+    "better-sqlite3": "^9.3.0",
+    "dotenv": "16.4.1",
+    "drizzle-orm": "^0.29.3",
+    "fastify": "4.25.2",
+    "pino": "^8.17.2",
+    "zod": "3.22.4",
+    "zod-validation-error": "^3.0.0"
   },
   "devDependencies": {
-    "@types/mapbox__mapbox-sdk": "0.13.8",
-    "@types/node": "20.8.9",
-    "@types/geojson": "7946.0.12",
-    "nodemon": "3.0.1",
-    "geojson": "0.5.0",
-    "ts-node": "10.9.1",
-    "fastify-type-provider-zod": "1.1.9"
+    "@types/better-sqlite3": "^7.6.9",
+    "@types/node": "20.11.0",
+    "drizzle-kit": "^0.20.13",
+    "eslint-config-custom": "*",
+    "fastify-type-provider-zod": "1.1.9",
+    "pino-pretty": "^10.3.1",
+    "nodemon": "^3.0.3",
+    "tsconfig": "*",
+    "tsx": "^4.7.0"
   }
 }

@@ -3,12 +3,13 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**"],
+      "env": ["NODE_ENV"]
     },
     "api#build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"],
-      "env": ["PG_HOST", "PG_USER", "PG_PASSWORD", "PG_DATABASE"]
+      "env": ["PGHOST", "PGUSER", "PGPASSWORD", "PGDATABASE"]
     },
     "lint": {
       "outputs": []

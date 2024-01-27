@@ -1,15 +1,10 @@
-import { config } from "dotenv";
-config();
+import "dotenv";
 
-import db from "./lib/database";
-import startServer from "./server";
+import startServer from "./server.js";
 
-db.initialize()
-  .then(() => {
-    startServer();
-  })
-  .catch((e) => {
-    console.error(e);
-    console.error("Failed to connect to database");
-    process.exit(1);
-  });
+try {
+  startServer();
+} catch (e) {
+  console.error(e);
+  process.exit(1);
+}

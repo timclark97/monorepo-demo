@@ -1,86 +1,116 @@
-import fastify from "fastify";
-import fastifySwagger from "@fastify/swagger";
+import { randomUUID } from "crypto";
+import Fastify from "fastify";
 import fastifySwaggerUI from "@fastify/swagger-ui";
+import FastifySwagger from "@fastify/swagger";
 import cors from "@fastify/cors";
+import { ZodError } from "zod";
 import {
   serializerCompiler,
   validatorCompiler,
-  jsonSchemaTransform,
+  jsonSchemaTransform
 } from "fastify-type-provider-zod";
+import { fromZodError } from "zod-validation-error";
+import type { ApiError } from "api-schemas";
 
-import UserRoutes from "./components/User/UserRoutes";
-import CompanyRoutes from "./components/Company/CompanyRoutes";
-import MatchRoutes from "./components/Match/MatchRoutes";
+import UserRoutes from "@/components/User/UserRoutes.js";
+import AppError from "@/lib/AppError.js";
+import { logger } from "@/lib/logger.js";
 
-const server = fastify();
+declare module "fastify" {
+  interface FastifyRequest {
+    sessionId: string;
+  }
+}
 
-// Middleware
+const server = Fastify({ logger, genReqId: () => randomUUID() });
+
+// Zod validation
 server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);
-server.setErrorHandler((e: any, req, reply) => {
-  if (e.name === "ZodError") {
+
+// Error handling
+server.setErrorHandler((e: unknown, req, reply) => {
+  if (e instanceof ZodError) {
     return reply.code(400).send({
       statusCode: 400,
-      error: "Validation Error",
-      message: "Invalid Input",
-      paths: e.issues,
-    });
+      errorType: "application_error",
+      message: fromZodError(e, {
+        prefix: "",
+        prefixSeparator: ""
+      }).toString()
+    } satisfies ApiError);
   }
-  if (e.name === "ResponseValidationError") {
-    return reply.code(500).send({
-      statusCode: 500,
-      error: "Data Response Error",
-      message: "Unable to construct proper response",
-      paths: e.details.issues,
-    });
-  }
-  if (e.name === "AppError") {
+  if (e instanceof AppError) {
     return reply.code(e.httpCode).send({
       statusCode: e.httpCode,
-      error: "Application Error",
-      message: e.message,
-    });
+      errorType: "application_error",
+      message: e.message
+    } satisfies ApiError);
   }
-  console.log(e);
-  reply.code(500).send({
+  req.log.error(e);
+  return reply.code(500).send({
     statusCode: 500,
-    message: "An unknown error has occurred",
-    error: "Server Error",
-  });
+    errorType: "internal_server_error",
+    message: "An unknown error has occurred"
+  } satisfies ApiError);
 });
 
-server.register(fastifySwagger, {
-  openapi: {
+// API Documentation Generation
+server.register(FastifySwagger, {
+  swagger: {
     info: {
       title: "Demo API",
       description: "A demo API",
-      version: "1.0.0",
+      version: "1.0.0"
     },
+    securityDefinitions: {
+      ApiKeyHeader: {
+        type: "apiKey",
+        name: "Authorization",
+        in: "header"
+      }
+    },
+    security: [{ ApiKeyHeader: [] }]
   },
-  transform: jsonSchemaTransform,
+  transform: jsonSchemaTransform
 });
 
-server.register(cors);
+server.register(cors, {
+  credentials: true,
+  allowedHeaders: "*",
+  methods: ["POST", "GET"]
+});
 
 // Routes
-server.register(UserRoutes, { prefix: "/users" });
-server.register(CompanyRoutes, { prefix: "/companies" });
-server.register(MatchRoutes, { prefix: "/matches" });
+
+// Public routes
 server.register(fastifySwaggerUI, {
-  prefix: "/docs",
+  prefix: "/docs"
 });
 
-const startServer = () => {
-  server
-    .listen({ port: 5001 })
-    .then(() => {
-      console.log("Server running. See API docs http://localhost:5001/docs");
-    })
-    .catch((e) => {
-      console.error(e);
-      console.error("Failed to start server. Terminating process.");
-      process.exit(1);
-    });
+// Private routes
+server.register(async function (f) {
+  f.decorateRequest("sessionId", null);
+  f.addHook("onRequest", async (request) => {
+    console.log(request.raw.headers.cookie);
+    const { authorization } = request.raw.headers;
+    if (!authorization) {
+      throw new AppError("Unauthorized", 401);
+    }
+    request.sessionId = authorization;
+  });
+
+  f.register(UserRoutes, { prefix: "/users" });
+});
+
+const startServer = async () => {
+  try {
+    await server.listen({ port: 5001 });
+    logger.info("Server running. See API docs http://localhost:5001/docs");
+  } catch (e) {
+    logger.fatal(e);
+    logger.fatal("Failed to start server. Terminating process.");
+  }
 };
 
 export default startServer;

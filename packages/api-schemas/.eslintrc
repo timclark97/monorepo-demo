@@ -1,0 +1,10 @@
+{
+  "env": {
+    "node": true,
+    "es2020": true
+  },
+  "extends": ["custom/base"],
+  "rules": {
+    "import/exports-last": "off"
+  }
+}

@@ -1,18 +1,21 @@
-import type { FastifyPluginAsync } from "fastify";
+import type { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { randomUUID } from "crypto";
 import {
   createUserBodySchema,
   createUserResponseSchema,
   getUserParamsSchema,
   getUserResponseSchema,
-  notFoundResponseSchema,
+  apiError,
+  searchUsersQuerySchema,
+  searchUsersResponseSchema
 } from "api-schemas";
 
-import User from "./UserEntity";
-import UserEventEmitter from "./UserEvents";
+import { db, users } from "@/lib/database.js";
+import AppError from "@/lib/AppError.js";
 
-const UserRoutes: FastifyPluginAsync = async (f) => {
+import UserEventEmitter from "./UserEvents.js";
+
+const UserRoutes = async (f: FastifyInstance) => {
   f.withTypeProvider<ZodTypeProvider>()
     .route({
       method: "POST",
@@ -21,14 +24,19 @@ const UserRoutes: FastifyPluginAsync = async (f) => {
         body: createUserBodySchema,
         response: {
           201: createUserResponseSchema,
-        },
+          400: apiError,
+          500: apiError
+        }
       },
       handler: async (req, res) => {
-        const id = randomUUID();
-        await User.insert({ id, ...req.body });
-        UserEventEmitter.emit("user-created", { id, ...req.body });
-        res.status(201).send({ id });
-      },
+        const [user] = await db
+          .insert(users)
+          .values({ ...req.body })
+          .returning();
+
+        UserEventEmitter.emit("user-created", user);
+        res.status(201).send(user);
+      }
     })
     .route({
       method: "GET",
@@ -37,16 +45,40 @@ const UserRoutes: FastifyPluginAsync = async (f) => {
         params: getUserParamsSchema,
         response: {
           200: getUserResponseSchema,
-          404: notFoundResponseSchema,
-        },
+          404: apiError,
+          500: apiError
+        }
       },
       handler: async (req, res) => {
-        const [user] = await User.find({ where: { id: req.params.id } });
+        const user = await db.query.users.findFirst({
+          where: (user, { eq }) => eq(user.id, req.params.id)
+        });
         if (!user) {
-          return res.status(404).send({ message: "User not found" });
+          throw new AppError("User not found", 404);
         }
         res.send(user);
+      }
+    })
+    .route({
+      method: "GET",
+      url: "/search",
+      schema: {
+        querystring: searchUsersQuerySchema,
+        response: {
+          200: searchUsersResponseSchema,
+          500: apiError
+        }
       },
+      handler: async (req, res) => {
+        const users = await db.query.users.findMany({
+          where: (user, { like, or }) =>
+            or(
+              like(user.firstName, `%${req.query.firstName}%`),
+              like(user.lastName, `%${req.query.lastName}%`)
+            )
+        });
+        res.send(users);
+      }
     });
 };
 
