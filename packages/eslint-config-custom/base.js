@@ -45,6 +45,7 @@ module.exports = {
       }
     ],
     "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
     "@typescript-eslint/require-await": "off",
     "import/no-deprecated": "error",
     "import/no-useless-path-segments": "error",

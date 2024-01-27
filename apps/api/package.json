@@ -5,9 +5,11 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "lint": "eslint .",
     "build": "tsc",
-    "dev": "nodemon --config nodemon.json"
+    "dev": "nodemon --config nodemon.json",
+    "check:lint": "eslint .",
+    "check:types": "tsc --noEmit",
+    "check:styles": "prettier --check --config ../../.prettierrc --ignore-path ../../.prettierignore ."
   },
   "dependencies": {
     "@fastify/cors": "8.5.0",

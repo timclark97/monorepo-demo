@@ -17,6 +17,7 @@ import AppError from "@/lib/AppError.js";
 import { logger } from "@/lib/logger.js";
 
 declare module "fastify" {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface FastifyRequest {
     sessionId: string;
   }

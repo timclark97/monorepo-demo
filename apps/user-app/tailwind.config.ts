@@ -5,9 +5,9 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "../../packages/components/**/*.{js,ts,jsx,tsx}",
+    "../../packages/components/**/*.{js,ts,jsx,tsx}"
   ],
 
-  plugins: [],
+  plugins: []
 };
 export default config;

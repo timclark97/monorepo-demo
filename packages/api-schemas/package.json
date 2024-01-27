@@ -5,7 +5,10 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "check:lint": "eslint .",
+    "check:types": "tsc --noEmit",
+    "check:styles": "prettier --check --config ../../.prettierrc --ignore-path ../../.prettierignore ."
   },
   "dependencies": {
     "zod": "^3.22.4"

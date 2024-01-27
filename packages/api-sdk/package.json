@@ -3,6 +3,11 @@
   "type": "module",
   "module": "src/index.ts",
   "types": "src/index.ts",
+  "scripts": {
+    "check:lint": "eslint .",
+    "check:types": "tsc --noEmit",
+    "check:styles": "prettier --check --config ../../.prettierrc --ignore-path ../../.prettierignore ."
+  },
   "dependencies": {
     "api-schemas": "*"
   }

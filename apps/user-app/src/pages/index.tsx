@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import { createUser } from "api-sdk";
@@ -6,9 +6,9 @@ import { createUser } from "api-sdk";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [userId, setUserId] = React.useState<number>();
-  const [error, setError] = React.useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [userId, setUserId] = useState<number>();
+  const [error, setError] = useState("");
 
   return (
     <>
@@ -30,27 +30,25 @@ export default function Home() {
             )}
             <form
               onSubmit={async (e) => {
-                try {
-                  setError("");
-                  setIsLoading(true);
-                  e.preventDefault();
-                  const fd = new FormData(e.target as HTMLFormElement);
-                  const firstName = fd.get("firstName") as string;
-                  const lastName = fd.get("lastName") as string;
+                setError("");
+                setIsLoading(true);
+                e.preventDefault();
+                const fd = new FormData(e.target as HTMLFormElement);
+                const firstName = fd.get("firstName") as string;
+                const lastName = fd.get("lastName") as string;
 
-                  const { data, error } = await createUser({
-                    firstName,
-                    lastName
-                  });
-                  if (error) {
-                    setError(error.message);
-                    setIsLoading(false);
-                    return;
-                  }
-
-                  setUserId(data.id);
+                const { data, error } = await createUser({
+                  firstName,
+                  lastName
+                });
+                if (error) {
+                  setError(error.message);
                   setIsLoading(false);
-                } catch (e: any) {}
+                  return;
+                }
+
+                setUserId(data.id);
+                setIsLoading(false);
               }}
               className="grid grid-cols-2 gap-4"
             >

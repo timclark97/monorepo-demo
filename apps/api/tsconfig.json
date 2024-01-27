@@ -11,9 +11,11 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/index.ts", "src/**/*.ts", "src/**/*.js"],
-  "exclude": ["node_modules", "dist"],
-  "ts-node": {
-    "esm": true, 
-  }, 
+  "include": [
+    "src/index.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "./drizzle.config.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
 }

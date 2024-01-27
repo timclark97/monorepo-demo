@@ -4,17 +4,20 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"],
-      "env": ["NODE_ENV"]
+      "env": [
+        "NODE_ENV",
+        "NEXT_PUBLIC_API_URL",
+        "PGHOST",
+        "PGUSER",
+        "PGPASSWORD",
+        "PGDATABASE"
+      ]
     },
-    "api#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"],
-      "env": ["PGHOST", "PGUSER", "PGPASSWORD", "PGDATABASE"]
-    },
-    "lint": {
-      "outputs": []
-    },
+    "lint": {},
     "dev": {},
-    "test": {}
+    "test": {},
+    "check:lint": {},
+    "check:types": {},
+    "check:styles": {}
   }
 }

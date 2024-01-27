@@ -7,7 +7,10 @@
   ],
   "scripts": {
     "mono": "node packages/mono/src/index.js",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "check:lint": "turbo check:lint",
+    "check:types": "turbo check:types",
+    "check:styles": "turbo check:styles"
   },
   "devDependencies": {
     "eslint": "8.56.0",
