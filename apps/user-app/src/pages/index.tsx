@@ -18,7 +18,6 @@ export default function Home() {
       <main className={`flex min-h-screen ${inter.className}`}>
         <div className="m-auto max-w-md">
           <h1 className="text-2xl font-semibold">Create Your User</h1>
-          <button onClick={() => fetch("/api/cookie")}>Set cookie</button>
           <div className="m-auto max-w-md pt-10">
             {userId && (
               <div className="pb-2 text-lg font-bold">
@@ -52,8 +51,8 @@ export default function Home() {
               }}
               className="grid grid-cols-2 gap-4"
             >
-              <input name="firstName" autoComplete="given-name" />
-              <input name="lastName" autoComplete="family-name" />
+              <input name="firstName" autoComplete="given-name" required />
+              <input name="lastName" autoComplete="family-name" required />
               <button disabled={isLoading} type="submit">
                 Submit
               </button>

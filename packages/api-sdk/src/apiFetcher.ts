@@ -63,6 +63,7 @@ export const apiFetcher = async <T>(
     process.env.NEXT_PUBLIC_API_URL + args.path,
     options
   );
+
   const data = (await resp.json()) as T | ApiError;
 
   if (!resp.ok) {

@@ -1,4 +1,7 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { relations } from "drizzle-orm";
+
+import { sessions } from "../Session/SessionEntity.js";
 
 export const users = sqliteTable("users", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
@@ -7,3 +10,7 @@ export const users = sqliteTable("users", {
 });
 
 export type User = typeof users.$inferSelect;
+
+export const userRelations = relations(users, ({ many }) => ({
+  sessions: many(sessions)
+}));
