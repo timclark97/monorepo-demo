@@ -5,12 +5,20 @@ import { users } from "../User/UserEntity.js";
 
 export const sessions = sqliteTable("sessions", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-  userId: integer("user_id", { mode: "number" }).references(() => users.id),
   expiresOn: integer("expires_on", { mode: "timestamp_ms" })
+    .$defaultFn(() => {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      return d;
+    })
+    .notNull(),
+  userId: integer("user_id", { mode: "number" })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" })
 });
 
-export const sessionRelations = relations(sessions, ({ one }) => ({
-  user: one(users)
-}));
+export type User = typeof users.$inferSelect;
 
-export type Session = typeof sessions.$inferSelect;
+export const sessionRelations = relations(sessions, ({ one }) => ({
+  user: one(users, { fields: [sessions.userId], references: [users.id] })
+}));

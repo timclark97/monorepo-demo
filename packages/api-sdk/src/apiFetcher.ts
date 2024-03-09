@@ -41,9 +41,10 @@ export const apiFetcher = async <T>(
   };
 
   if (
-    args.method === "POST" ||
-    args.method === "PUT" ||
-    args.method === "PATCH"
+    (args.method === "POST" ||
+      args.method === "PUT" ||
+      args.method === "PATCH") &&
+    args.body
   ) {
     options.body = JSON.stringify(args.body);
     options.headers = {

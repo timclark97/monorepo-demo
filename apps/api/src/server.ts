@@ -3,7 +3,7 @@ import Fastify from "fastify";
 import fastifySwaggerUI from "@fastify/swagger-ui";
 import FastifySwagger from "@fastify/swagger";
 import cors from "@fastify/cors";
-import { ZodError } from "zod";
+import { ZodError, z } from "zod";
 import {
   serializerCompiler,
   validatorCompiler,
@@ -12,14 +12,17 @@ import {
 import { fromZodError } from "zod-validation-error";
 import type { ApiError } from "api-schemas";
 
+import { verifySession } from "@/components/Session/SessionService.js";
 import UserRoutes from "@/components/User/UserRoutes.js";
+import AuthenticationRoutes from "@/components/Authentication/AuthenticationRoutes.js";
 import AppError from "@/lib/AppError.js";
 import { logger } from "@/lib/logger.js";
+import { User } from "@/components/User/UserEntity.js";
 
 declare module "fastify" {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface FastifyRequest {
-    sessionId: string;
+    user: User;
   }
 }
 
@@ -88,17 +91,19 @@ server.register(cors, {
 server.register(fastifySwaggerUI, {
   prefix: "/docs"
 });
+server.register(AuthenticationRoutes, { prefix: "/auth" });
 
 // Private routes
 server.register(async function (f) {
-  f.decorateRequest("sessionId", null);
+  f.decorateRequest("user", null);
   f.addHook("onRequest", async (request) => {
-    console.log(request.raw.headers.cookie);
     const { authorization } = request.raw.headers;
-    if (!authorization) {
+    const parsed = z.string().uuid().safeParse(authorization);
+    if (!parsed.success) {
       throw new AppError("Unauthorized", 401);
     }
-    request.sessionId = authorization;
+    const session = await verifySession(Number.parseInt(parsed.data));
+    request.user = session.user;
   });
 
   f.register(UserRoutes, { prefix: "/users" });
